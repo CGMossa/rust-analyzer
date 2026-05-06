@@ -66,11 +66,25 @@ impl Borrow<AbsPath> for AbsPathBuf {
 impl TryFrom<Utf8PathBuf> for AbsPathBuf {
     type Error = Utf8PathBuf;
     fn try_from(path_buf: Utf8PathBuf) -> Result<AbsPathBuf, Utf8PathBuf> {
-        if !path_buf.is_absolute() {
+        if !is_absolute(&path_buf) {
             return Err(path_buf);
         }
         Ok(AbsPathBuf(path_buf))
     }
+}
+
+#[cfg(not(all(target_arch = "wasm32", target_os = "unknown")))]
+fn is_absolute(p: &Utf8PathBuf) -> bool {
+    p.is_absolute()
+}
+
+/// On wasm32-unknown-unknown, std's `Path::is_absolute` falls through to the
+/// Windows-style check (no `unix` or `windows` cfg matches), so `/foo` is
+/// reported as non-absolute. Treat any path with a root as absolute on this
+/// target — there is no concept of a working directory anyway.
+#[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
+fn is_absolute(p: &Utf8PathBuf) -> bool {
+    p.is_absolute() || p.has_root()
 }
 
 impl TryFrom<&str> for AbsPathBuf {
@@ -193,11 +207,21 @@ impl ToOwned for AbsPath {
 impl<'a> TryFrom<&'a Utf8Path> for &'a AbsPath {
     type Error = &'a Utf8Path;
     fn try_from(path: &'a Utf8Path) -> Result<&'a AbsPath, &'a Utf8Path> {
-        if !path.is_absolute() {
+        if !is_absolute_ref(path) {
             return Err(path);
         }
         Ok(AbsPath::assert(path))
     }
+}
+
+#[cfg(not(all(target_arch = "wasm32", target_os = "unknown")))]
+fn is_absolute_ref(p: &Utf8Path) -> bool {
+    p.is_absolute()
+}
+
+#[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
+fn is_absolute_ref(p: &Utf8Path) -> bool {
+    p.is_absolute() || p.has_root()
 }
 
 impl AbsPath {
