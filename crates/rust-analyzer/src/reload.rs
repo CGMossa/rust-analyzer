@@ -32,6 +32,8 @@ use stdx::{format_to, thread::ThreadIntent};
 use triomphe::Arc;
 use vfs::{AbsPath, AbsPathBuf, ChangeKind};
 
+#[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
+use crate::lsp::wasm_file_url::WasmFileUrlExt as _;
 use crate::{
     config::{Config, FilesWatcher, LinkedProject},
     flycheck::{FlycheckConfig, FlycheckHandle},

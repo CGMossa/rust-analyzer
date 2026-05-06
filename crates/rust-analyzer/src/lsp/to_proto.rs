@@ -25,6 +25,8 @@ use semver::VersionReq;
 use serde_json::to_value;
 use vfs::AbsPath;
 
+#[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
+use crate::lsp::wasm_file_url::WasmFileUrlExt as _;
 use crate::{
     config::{CallInfoConfig, ClientCommandsConfig, Config},
     global_state::GlobalStateSnapshot,

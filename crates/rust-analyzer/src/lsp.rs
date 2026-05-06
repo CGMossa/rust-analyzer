@@ -13,6 +13,9 @@ pub(crate) mod from_proto;
 pub(crate) mod semantic_tokens;
 pub(crate) mod to_proto;
 pub(crate) mod utils;
+#[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
+#[doc(hidden)]
+pub mod wasm_file_url;
 
 #[derive(Debug)]
 pub(crate) struct LspError {

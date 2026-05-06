@@ -13,8 +13,10 @@ rust-version.workspace = true
 doctest = false
 
 [dependencies]
-home = "0.5.11"
 camino.workspace = true
+
+[target.'cfg(not(all(target_arch = "wasm32", target_os = "unknown")))'.dependencies]
+home = "0.5.11"
 
 [lints]
 workspace = true

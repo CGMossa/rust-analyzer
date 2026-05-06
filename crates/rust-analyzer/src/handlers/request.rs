@@ -32,6 +32,8 @@ use syntax::{TextRange, TextSize};
 use triomphe::Arc;
 use vfs::{AbsPath, AbsPathBuf, FileId, VfsPath};
 
+#[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
+use crate::lsp::wasm_file_url::WasmFileUrlExt as _;
 use crate::{
     config::{
         ClientCommandsConfig, Config, HoverActionsConfig, RustfmtConfig, WorkspaceSymbolConfig,

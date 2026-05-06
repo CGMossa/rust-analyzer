@@ -119,12 +119,18 @@ fn get_cargo_home() -> Option<Utf8PathBuf> {
         return Utf8PathBuf::try_from(PathBuf::from(path)).ok();
     }
 
-    if let Some(mut path) = home::home_dir() {
-        path.push(".cargo");
-        return Utf8PathBuf::try_from(path).ok();
+    #[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
+    {
+        None
     }
 
-    None
+    #[cfg(not(all(target_arch = "wasm32", target_os = "unknown")))]
+    if let Some(mut path) = home::home_dir() {
+        path.push(".cargo");
+        Utf8PathBuf::try_from(path).ok()
+    } else {
+        None
+    }
 }
 
 fn lookup_in_path(exec: &str) -> Option<Utf8PathBuf> {

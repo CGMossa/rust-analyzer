@@ -16,6 +16,8 @@ use rustc_hash::FxHashMap;
 use stdx::format_to;
 use vfs::{AbsPathBuf, Vfs};
 
+#[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
+use crate::lsp::wasm_file_url::WasmFileUrlExt as _;
 use crate::{
     cli::flags,
     line_index::{LineEndings, LineIndex, PositionEncoding},

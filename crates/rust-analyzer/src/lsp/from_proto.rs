@@ -6,6 +6,8 @@ use paths::Utf8PathBuf;
 use syntax::{TextRange, TextSize};
 use vfs::AbsPathBuf;
 
+#[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
+use crate::lsp::wasm_file_url::WasmFileUrlExt as _;
 use crate::{
     global_state::GlobalStateSnapshot,
     line_index::{LineIndex, PositionEncoding},

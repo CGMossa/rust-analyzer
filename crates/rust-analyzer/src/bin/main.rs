@@ -23,6 +23,9 @@ use rust_analyzer::{
 use tracing_subscriber::fmt::writer::BoxMakeWriter;
 use vfs::AbsPathBuf;
 
+#[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
+use rust_analyzer::lsp::wasm_file_url::WasmFileUrlExt as _;
+
 #[cfg(feature = "mimalloc")]
 #[global_allocator]
 static ALLOC: mimalloc::MiMalloc = mimalloc::MiMalloc;
